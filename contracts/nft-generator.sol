@@ -256,44 +256,60 @@ contract CarNFT_Generate is KIP17, KIP17URIStorage, Ownable {
     // getTokenImageURI() : 토큰 URI 생성 - 차량모델 => 해당차량이미지
     // */
     function getTokenImageURI(uint256 tokenId) private view returns (string memory) {
-        CarData memory tempCarData = _CarData[tokenId];
-        string memory model = tempCarData.model;
+        string memory model = _CarData[tokenId].model;
+        if (bytes(model).length > 0) {
+            return getModelImageURI(model);
+        }
+        return _defaultImageURI;
+    }
 
-        if (keccak256(bytes(model)) == keccak256(bytes("8mb_Test"))) {
+    function getModelImageURI(string memory model) private view returns (string memory) {
+    string memory lowercaseModel = toLowerCase(model);
+        if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("8mb_test"))) {
             return _8mb_Test;
-        } else if (keccak256(bytes(model)) == keccak256(bytes("1mb_K5"))) {
+        } else if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("1mb_k5"))) {
             return _1mb_K5;
-        } else if (keccak256(bytes(model)) == keccak256(bytes("1mb_Sonata"))) {
+        } else if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("1mb_sonata"))) {
             return _1mb_Sonata;
-        } else if (keccak256(bytes(model)) == keccak256(bytes("1mb_Tucson"))) {
+        } else if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("1mb_tucson"))) {
             return _1mb_Tucson;
-        } else if (keccak256(bytes(model)) == keccak256(bytes("Danawa_Avante"))) {
+        } else if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("danawa_avante"))) {
             return _Danawa_Avante;
-        } else if (keccak256(bytes(model)) == keccak256(bytes("Danawa_Morning"))) {
+        } else if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("danawa_morning"))) {
             return _Danawa_Morning;
-        } else if (keccak256(bytes(model)) == keccak256(bytes("Danawa_Sonata"))) {
+        } else if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("danawa_sonata"))) {
             return _Danawa_Sonata;
-        } else if (keccak256(bytes(model)) == keccak256(bytes("Danawa_Sorento"))) {
+        } else if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("danawa_sorento"))) {
             return _Danawa_Sorento;
-        } else if (keccak256(bytes(model)) == keccak256(bytes("Encar_Avante"))) {
+        } else if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("encar_avante"))) {
             return _Encar_Avante;
-        } else if (keccak256(bytes(model)) == keccak256(bytes("Encar_Morning"))) {
+        } else if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("encar_morning"))) {
             return _Encar_Morning;
-        } else if (keccak256(bytes(model)) == keccak256(bytes("Encar_Sonata"))) {
+        } else if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("encar_sonata"))) {
             return _Encar_Sonata;
-        } else if (keccak256(bytes(model)) == keccak256(bytes("Encar_Sorento"))) {
+        } else if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("encar_sorento"))) {
             return _Encar_Sorento;
-        } else if (keccak256(bytes(model)) == keccak256(bytes("Namu_Avante"))) {
+        } else if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("namu_avante"))) {
             return _Namu_Avante;
-        } else if (keccak256(bytes(model)) == keccak256(bytes("Namu_Morning"))) {
+        } else if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("namu_morning"))) {
             return _Namu_Morning;
-        } else if (keccak256(bytes(model)) == keccak256(bytes("Namu_Sonata"))) {
+        } else if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("namu_sonata"))) {
             return _Namu_Sonata;
-        } else if (keccak256(bytes(model)) == keccak256(bytes("Namu_Sorento"))) {
+        } else if (keccak256(bytes(lowercaseModel)) == keccak256(bytes("namu_sorento"))) {
             return _Namu_Sorento;
         } else {
             return _defaultImageURI;
         }
+    }
+
+    function toLowerCase(string memory str) private pure returns (string memory) {
+        bytes memory strBytes = bytes(str);
+        for (uint i = 0; i < strBytes.length; i++) {
+            if ((uint8(strBytes[i]) >= 65) && (uint8(strBytes[i]) <= 90)) {
+                strBytes[i] = bytes1(uint8(strBytes[i]) + 32);
+            }
+        }
+        return string(strBytes);
     }
 
     // /*
