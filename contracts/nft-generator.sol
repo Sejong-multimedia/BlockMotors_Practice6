@@ -18,13 +18,13 @@ contract CarNFT_Generate is KIP17, KIP17URIStorage, Ownable {
     }
 
     struct CarData {                                    // _CarData[tokenId].data
-        string brand;            // 제조사
+        string brand;           // 제조사
         string model;           // 모델
-        uint16 year;            // 연식
+        string year;            // 연식
         string licenseNum;      // 차량번호
         string registerNum;     // 등록번호
         string fuel;            // 사용연료
-        uint16 cc;              // 배기량
+        string cc;              // 배기량
     }
 
     string private _defaultImageURI = "https://gateway.pinata.cloud/ipfs/QmacnV7iSpZkpvzbR3orPBPpmeX9CCzsURAaxLLZMKWktY";
@@ -61,11 +61,11 @@ contract CarNFT_Generate is KIP17, KIP17URIStorage, Ownable {
     function setCarData(
         string memory brand,
         string memory model,
-        uint16 year,
+        string memory year,
         string memory licenseNum,
         string memory registerNum,
         string memory fuel,
-        uint16 cc
+        string memory cc
     ) private pure returns (CarData memory) {
         return CarData({
             brand: brand,
@@ -82,15 +82,15 @@ contract CarNFT_Generate is KIP17, KIP17URIStorage, Ownable {
     generateCarNFT() : NFT를 발행하고 토큰Id 반환
     */
     function generateCarNFT(
-        address to,
         string memory brand,
         string memory model,
-        uint16 year,
+        string memory year,
         string memory licenseNum,
         string memory registerNum,
         string memory fuel,
-        uint16 cc
+        string memory cc
     ) public returns (uint256) {
+        address to = msg.sender;
         uint256 tokenId = _tokenIdCounter.current();
         _mint(to, tokenId);
         _setTokenURI(tokenId, getTokenImageURI(tokenId));        // 차량모델 => 해당차량이미지
@@ -120,11 +120,11 @@ contract CarNFT_Generate is KIP17, KIP17URIStorage, Ownable {
         uint256 tokenId,
         string memory brand,
         string memory model,
-        uint16 year,
+        string memory year,
         string memory licenseNum,
         string memory registerNum,
         string memory fuel,
-        uint16 cc
+        string memory cc
     ) public {
         require(_exists(tokenId), "Token ID does not exist");
         require(msg.sender == ownerOf(tokenId), "Only NFT owner can call this function");
@@ -149,11 +149,11 @@ contract CarNFT_Generate is KIP17, KIP17URIStorage, Ownable {
     function getCarNFT(uint256 tokenId) public view returns (
         string memory,
         string memory,
-        uint16,
         string memory,
         string memory,
         string memory,
-        uint16
+        string memory,
+        string memory
     ) {
         require(_exists(tokenId), "Token ID does not exist");
         CarData memory tempCarData = _CarData[tokenId];
@@ -174,8 +174,12 @@ contract CarNFT_Generate is KIP17, KIP17URIStorage, Ownable {
     */
     function getOwnedTokenIds(address user) public view returns (uint256[] memory) {
         require(user != address(0), "User Address does not exist");
-        require(_CarsOwned[user].length > 0, "User does not own any tokens");
-        return _CarsOwned[user];
+        if (_CarsOwned[user].length == 0) {
+            uint256[] memory emptyArray;
+            return emptyArray;
+        } else {
+            return _CarsOwned[user];
+        }
     }
 
     /*
