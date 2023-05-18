@@ -18,7 +18,7 @@ contract CarNFT_Generate is KIP17, KIP17URIStorage, Ownable {
     }
 
     struct CarData {                                    // _CarData[tokenId].data
-        string make;            // 제조사
+        string brand;            // 제조사
         string model;           // 모델
         uint16 year;            // 연식
         string licenseNum;      // 차량번호
@@ -59,7 +59,7 @@ contract CarNFT_Generate is KIP17, KIP17URIStorage, Ownable {
     setCarData() : 메모리에 CarData 반환
     */
     function setCarData(
-        string memory make,
+        string memory brand,
         string memory model,
         uint16 year,
         string memory licenseNum,
@@ -68,7 +68,7 @@ contract CarNFT_Generate is KIP17, KIP17URIStorage, Ownable {
         uint16 cc
     ) private pure returns (CarData memory) {
         return CarData({
-            make: make,
+            brand: brand,
             model: model,
             year: year,
             licenseNum: licenseNum,
@@ -83,7 +83,7 @@ contract CarNFT_Generate is KIP17, KIP17URIStorage, Ownable {
     */
     function generateCarNFT(
         address to,
-        string memory make,
+        string memory brand,
         string memory model,
         uint16 year,
         string memory licenseNum,
@@ -98,7 +98,7 @@ contract CarNFT_Generate is KIP17, KIP17URIStorage, Ownable {
         _tokenIdCounter.increment();
 
         CarData memory tempCarData = setCarData(
-            make,
+            brand,
             model,
             year,
             licenseNum,
@@ -118,7 +118,7 @@ contract CarNFT_Generate is KIP17, KIP17URIStorage, Ownable {
     */
     function updateCarNFT(
         uint256 tokenId,
-        string memory make,
+        string memory brand,
         string memory model,
         uint16 year,
         string memory licenseNum,
@@ -131,7 +131,7 @@ contract CarNFT_Generate is KIP17, KIP17URIStorage, Ownable {
         _setTokenURI(tokenId, getTokenImageURI(tokenId));        // 차량모델 => 해당차량이미지
 
         CarData memory tempCarData = setCarData(
-            make,
+            brand,
             model,
             year,
             licenseNum,
@@ -159,7 +159,7 @@ contract CarNFT_Generate is KIP17, KIP17URIStorage, Ownable {
         CarData memory tempCarData = _CarData[tokenId];
 
         return(
-            tempCarData.make,
+            tempCarData.brand,
             tempCarData.model,
             tempCarData.year,
             tempCarData.licenseNum,
